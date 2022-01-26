@@ -74,7 +74,7 @@ void set_dcache_stage(Dcache_Stage* new_dc) {
 /**************************************************************************************/
 /* init_dcache_stage: */
 
-void init_dcache_stage(uns8 proc_id, const char* name) {
+void init_dcache_stage(uns8 proc_id, const char* name) { // sgazzaz add the hash map here as a global variable alongside initializing the fully associative cache
   uns ii;
 
   ASSERT(0, dc);
@@ -91,7 +91,7 @@ void init_dcache_stage(uns8 proc_id, const char* name) {
 
   /* initialize the cache structure */
   init_cache(&dc->dcache, "DCACHE", DCACHE_SIZE, DCACHE_ASSOC, DCACHE_LINE_SIZE,
-             sizeof(Dcache_Data), DCACHE_REPL);
+             sizeof(Dcache_Data), DCACHE_REPL); // sgazzaz we can initialize a second fully associative cache here where DCACHE_SIZE/DCACHE_LINE_SIZE = DCACHE_ASSOC
 
   reset_dcache_stage();
 
@@ -283,9 +283,9 @@ void update_dcache_stage(Stage_Data* src_sd) {
       ideal_l2l1_prefetcher(op);
 
     /* now access the dcache with it */
-
+    
     line = (Dcache_Data*)cache_access(&dc->dcache, op->oracle_info.va,
-                                      &line_addr, TRUE);
+                                      &line_addr, TRUE); // sgazzaz here we access the cache with the address
     op->dcache_cycle = cycle_count;
     dc->idle_cycle   = MAX2(dc->idle_cycle, cycle_count + DCACHE_CYCLES);
 
